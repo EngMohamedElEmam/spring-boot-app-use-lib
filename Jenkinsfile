@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerize.buildDockerImage(DOCKER_REGISTRY)
+                    dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE)
                 }
             }
         }
