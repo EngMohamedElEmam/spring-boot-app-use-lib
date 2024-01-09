@@ -29,19 +29,10 @@ pipeline {
             }
         }
 
-        stage('Get Commit Hash') {
-            steps {
-                script {
-                    // Get the short commit hash and store it in COMMIT_HASH
-                    COMMIT_HASH = dockerize.getCommitHash()
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, COMMIT_HASH)
+                    dockerize.buildDockerImage(DOCKER_REGISTRY, COMMIT_HASH)
                 }
             }
         }
@@ -49,7 +40,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, COMMIT_HASH, credentialsId)
+                    dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, credentialsId)
                 }
             }
         }
