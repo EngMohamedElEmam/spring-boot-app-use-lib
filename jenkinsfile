@@ -1,4 +1,4 @@
-@Library('dockerize@1.0') _
+@Library('dockerize@main') _
 
 // Set your parameters
 def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
