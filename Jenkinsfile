@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerize.buildDockerImage(DOCKER_REGISTRY, COMMIT_HASH)
+                    dockerize.buildDockerImage(DOCKER_REGISTRY)
                 }
             }
         }
