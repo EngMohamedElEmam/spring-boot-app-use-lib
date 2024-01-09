@@ -2,7 +2,7 @@
 
 // Set your parameters
 def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
-def DOCKER_IMAGE = 'spring-boot-app'
+def DOCKER_IMAGE = 'spring-boot-app-lib'
 def credentialsId = "docker-creds"
 
 pipeline {
@@ -12,8 +12,8 @@ pipeline {
         OPENSHIFT_PROJECT = 'nti'
         OPENSHIFT_SERVER = 'https://api.ocpuat.devopsconsulting.org:6443'
         DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
-        DOCKER_IMAGE = 'spring-boot-app'
-        APP_SERVICE_NAME = 'spring-boot-app'
+        DOCKER_IMAGE = 'spring-boot-app-lib'
+        APP_SERVICE_NAME = 'spring-boot-app-lib'
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
     }
