@@ -27,13 +27,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dockerUtils.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER)
+                dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER)
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                dockerUtils.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER, credentialsId)
+                dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER, credentialsId)
             }
         }
 
