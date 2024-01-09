@@ -17,8 +17,20 @@ pipeline {
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
     }
+    
+    // Define a variable to store the commit hash
+    def COMMIT_HASH
 
     stages {
+        stage('Get Commit Hash') {
+            steps {
+                script {
+                    // Get the short commit hash and store it in COMMIT_HASH
+                    COMMIT_HASH = dockerize.getCommitHash()
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 script {
@@ -30,7 +42,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER)
+                    dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, COMMIT_HASH)
                 }
             }
         }
@@ -38,7 +50,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER, credentialsId)
+                    dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, COMMIT_HASH, credentialsId)
                 }
             }
         }
@@ -51,7 +63,7 @@ pipeline {
                     }
                     sh "oc project \${OPENSHIFT_PROJECT}"
                     sh "oc delete dc,svc,deploy,ingress,route \${DOCKER_IMAGE} || true"
-                    sh "oc new-app \${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    sh "oc new-app \${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${COMMIT_HASH}"
                     sh "oc create route edge --service \${APP_SERVICE_NAME} --port \${APP_PORT} --hostname \${APP_HOST_NAME} --insecure-policy Redirect"
                 }
             }
