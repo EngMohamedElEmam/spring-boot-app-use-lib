@@ -21,19 +21,19 @@ pipeline {
 
 
     stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    git branch: 'main', url: 'https://github.com/EngMohamedElEmam/spring-boot-app-use-lib'
+                }
+            }
+        }
+
         stage('Get Commit Hash') {
             steps {
                 script {
                     // Get the short commit hash and store it in COMMIT_HASH
                     COMMIT_HASH = dockerize.getCommitHash()
-                }
-            }
-        }
-
-        stage('Checkout') {
-            steps {
-                script {
-                    git branch: 'main', url: 'https://github.com/EngMohamedElEmam/spring-boot-app-use-lib'
                 }
             }
         }
