@@ -16,6 +16,7 @@ pipeline {
         APP_SERVICE_NAME = 'spring-boot-app'
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
+        COMMIT_HASH = getCommitHash()
     }
     
 
