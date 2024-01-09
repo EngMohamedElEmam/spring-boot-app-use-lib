@@ -1,9 +1,14 @@
+@Library('dockerize@1.0') _
+
+// Set your parameters
+def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
+def DOCKER_IMAGE = 'spring-boot-app'
+def credentialsId = "docker-creds"
+
 pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
-        DOCKER_IMAGE = 'spring-boot-app'
         OPENSHIFT_PROJECT = 'nti'
         OPENSHIFT_SERVER = 'https://api.ocpuat.devopsconsulting.org:6443'
         APP_SERVICE_NAME = 'spring-boot-app'
@@ -22,20 +27,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${BUILD_NUMBER}")
-                }
+                dockerUtils.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER)
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
-                        sh "echo \${DOCKER_REGISTRY_PASSWORD} | docker login -u \${DOCKER_REGISTRY_USERNAME} --password-stdin"
-                        docker.image("${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${BUILD_NUMBER}").push()
-                    }
-                }
+                dockerUtils.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, BUILD_NUMBER, credentialsId)
             }
         }
 
