@@ -3,7 +3,7 @@
 // Set your parameters
 def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
 def DOCKER_IMAGE = 'spring-boot-app'
-def credentialsId = "docker-creds"
+def credentialsId = "docker-creds"    
 
 pipeline {
     agent any
@@ -18,8 +18,7 @@ pipeline {
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
     }
     
-    // Define a variable to store the commit hash
-    def COMMIT_HASH
+
 
     stages {
         stage('Get Commit Hash') {
