@@ -22,7 +22,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    git branch: 'main', url: 'https://github.com/EngMohamedElEmam/spring-boot-app-use-lib'
+                    git branch: 'main', url: 'https://github.com/EngMohamedElEmam/spring-boot-app'
                 }
             }
         }
