@@ -53,6 +53,7 @@ pipeline {
                     }
                     sh "oc project \${OPENSHIFT_PROJECT}"
                     sh "oc delete dc,svc,deploy,ingress,route \${DOCKER_IMAGE} || true"
+                    def COMMIT_HASH = getCommitHash()
                     sh "oc new-app \${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${COMMIT_HASH}"
                     sh "oc create route edge --service \${APP_SERVICE_NAME} --port \${APP_PORT} --hostname \${APP_HOST_NAME} --insecure-policy Redirect"
                 }
