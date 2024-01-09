@@ -1,9 +1,8 @@
 @Library('dockerize@main') _
 
-// Set your parameters
 def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
 def DOCKER_IMAGE = 'spring-boot-app'
-def credentialsId = "docker-creds"    
+def credentialsId = "docker-creds"
 
 pipeline {
     agent any
@@ -17,8 +16,6 @@ pipeline {
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
     }
-    
-
 
     stages {
         stage('Checkout') {
@@ -32,7 +29,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE)
+                    COMMIT_HASH = dockerize.buildDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE)
                 }
             }
         }
@@ -40,7 +37,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, credentialsId)
+                    COMMIT_HASH = dockerize.pushDockerImage(DOCKER_REGISTRY, DOCKER_IMAGE, credentialsId)
                 }
             }
         }
@@ -49,7 +46,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'openshift-credentials', variable: 'OPENSHIFT_SECRET')]) {
-                    sh "oc login --token=\${OPENSHIFT_SECRET} \${OPENSHIFT_SERVER} --insecure-skip-tls-verify"
+                        sh "oc login --token=\${OPENSHIFT_SECRET} \${OPENSHIFT_SERVER} --insecure-skip-tls-verify"
                     }
                     sh "oc project \${OPENSHIFT_PROJECT}"
                     sh "oc delete dc,svc,deploy,ingress,route \${DOCKER_IMAGE} || true"
