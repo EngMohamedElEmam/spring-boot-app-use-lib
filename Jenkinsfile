@@ -16,7 +16,6 @@ pipeline {
         APP_SERVICE_NAME = 'spring-boot-app'
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
-        COMMIT_HASH = getCommitHash()
     }
     
 
@@ -49,6 +48,7 @@ pipeline {
         stage('Deploy to OpenShift') {
             steps {
                 script {
+                    def COMMIT_HASH = getCommitHash()
                     withCredentials([string(credentialsId: 'openshift-credentials', variable: 'OPENSHIFT_SECRET')]) {
                     sh "oc login --token=\${OPENSHIFT_SECRET} \${OPENSHIFT_SERVER} --insecure-skip-tls-verify"
                     }
