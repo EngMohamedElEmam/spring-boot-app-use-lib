@@ -3,27 +3,27 @@
 // Set your parameters
 def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
 def DOCKER_IMAGE = 'spring-boot-app'
-def credentialsId = "docker-creds"
-def COMMIT_HASH
+def credentialsId = "docker-creds"    
 
 pipeline {
     agent any
 
     environment {
         OPENSHIFT_PROJECT = 'nti'
-        OPENSHIFT_SERVER = 'https://api.occpuat.devopsconsulting.org:6443'
+        OPENSHIFT_SERVER = 'https://api.ocpuat.devopsconsulting.org:6443'
         DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
         DOCKER_IMAGE = 'spring-boot-app'
         APP_SERVICE_NAME = 'spring-boot-app'
         APP_PORT = '8080'
-        APP_HOST_NAME = 'spring-boot-app.apps.occpuat.devopsconsulting.org'
+        APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
     }
+    
+
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    COMMIT_HASH = getCommitHash()
                     git branch: 'main', url: 'https://github.com/EngMohamedElEmam/spring-boot-app-use-lib'
                 }
             }
@@ -49,11 +49,10 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'openshift-credentials', variable: 'OPENSHIFT_SECRET')]) {
-                        sh "oc login --token=\${OPENSHIFT_SECRET} \${OPENSHIFT_SERVER} --insecure-skip-tls-verify"
+                    sh "oc login --token=\${OPENSHIFT_SECRET} \${OPENSHIFT_SERVER} --insecure-skip-tls-verify"
                     }
                     sh "oc project \${OPENSHIFT_PROJECT}"
                     sh "oc delete dc,svc,deploy,ingress,route \${DOCKER_IMAGE} || true"
-                    def COMMIT_HASH = getCommitHash()
                     sh "oc new-app \${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${COMMIT_HASH}"
                     sh "oc create route edge --service \${APP_SERVICE_NAME} --port \${APP_PORT} --hostname \${APP_HOST_NAME} --insecure-policy Redirect"
                 }
