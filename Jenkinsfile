@@ -11,6 +11,7 @@ pipeline {
     environment {
         OPENSHIFT_PROJECT = 'nti'
         OPENSHIFT_SERVER = 'https://api.ocpuat.devopsconsulting.org:6443'
+        DOCKER_IMAGE = 'spring-boot-app'
         APP_SERVICE_NAME = 'spring-boot-app'
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.ocpuat.devopsconsulting.org'
