@@ -11,6 +11,7 @@ pipeline {
     environment {
         OPENSHIFT_PROJECT = 'nti'
         OPENSHIFT_SERVER = 'https://api.ocpuat.devopsconsulting.org:6443'
+        DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
         DOCKER_IMAGE = 'spring-boot-app'
         APP_SERVICE_NAME = 'spring-boot-app'
         APP_PORT = '8080'
@@ -50,7 +51,7 @@ pipeline {
                     }
                     sh "oc project \${OPENSHIFT_PROJECT}"
                     sh "oc delete dc,svc,deploy,ingress,route \${DOCKER_IMAGE} || true"
-                    sh "oc new-app \${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    sh "oc new-app ${DOCKER_IMAGE}:${BUILD_NUMBER}"
                     sh "oc create route edge --service \${APP_SERVICE_NAME} --port \${APP_PORT} --hostname \${APP_HOST_NAME} --insecure-policy Redirect"
                 }
             }
