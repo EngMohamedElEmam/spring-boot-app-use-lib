@@ -3,7 +3,8 @@
 // Set your parameters
 def DOCKER_REGISTRY = 'docker.io/mohamedemam2020'
 def DOCKER_IMAGE = 'spring-boot-app'
-def credentialsId = "docker-creds"    
+def credentialsId = "docker-creds"
+def COMMIT_HASH
 
 pipeline {
     agent any
@@ -16,13 +17,13 @@ pipeline {
         APP_SERVICE_NAME = 'spring-boot-app'
         APP_PORT = '8080'
         APP_HOST_NAME = 'spring-boot-app.apps.occpuat.devopsconsulting.org'
-        COMMIT_HASH = getCommitHash()
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 script {
+                    COMMIT_HASH = getCommitHash()
                     git branch: 'main', url: 'https://github.com/EngMohamedElEmam/spring-boot-app-use-lib'
                 }
             }
